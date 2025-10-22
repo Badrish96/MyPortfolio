@@ -5,11 +5,20 @@
 /* Use IBM Plex Mono variable if available (in layout we load the font via next/font) */
 :root {
 	/* Light theme (default) - subtle, readable */
-	--bg: #f6fffe; /* very pale cyan */
+	--bg: #f9f5f551; /* very pale cyan */
 	--fg: #063936; /* dark teal for text */
 	--primary: #0ea5a1; /* accent */
 }
 
+  .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* Hide scrollbar for IE, Edge and Firefox */
+      .no-scrollbar {
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+      }
 
 /* Manual dark class override (for JS theme toggles) */
 .dark {

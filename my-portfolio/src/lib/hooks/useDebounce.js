@@ -1,10 +1,16 @@
-import { useRef, useEffect } from 'react';
+"use client";
+import { useState, useEffect } from 'react';
 
 export default function useDebounce(value, delay) {
-  const ref = useRef(value);
+  const [debouncedValue, setDebouncedValue] = useState(value);
+
   useEffect(() => {
-    const t = setTimeout(() => (ref.current = value), delay);
-    return () => clearTimeout(t);
+    const handler = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+
+    return () => clearTimeout(handler);
   }, [value, delay]);
-  return ref.current;
+
+  return debouncedValue;
 }

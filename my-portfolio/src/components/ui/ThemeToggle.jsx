@@ -1,5 +1,6 @@
 "use client";
 
+import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react';
 
 function MoonIcon(props) {
@@ -20,43 +21,29 @@ function SunIcon(props) {
 }
 
 export default function ThemeToggle() {
-  const [theme, setTheme] = useState(() => {
-    if (typeof window === 'undefined') return 'light';
-    try {
-      const stored = localStorage.getItem('theme');
-      if (stored === 'dark' || stored === 'light') return stored;
-    } catch (e) {}
-    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-  });
+  const { theme, setTheme, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
-  useEffect(() => {
-    const root = document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    try {
-      localStorage.setItem('theme', theme);
-    } catch (e) {
-      /* ignore */
-    }
-  }, [theme]);
+  useEffect(() => setMounted(true), [])
 
   function toggle() {
-    setTheme((t) => (t === 'dark' ? 'light' : 'dark'));
+    // When using next-themes with attribute='class', setTheme toggles correctly
+    setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')
   }
+
+  // Avoid rendering mismatch until mounted
+  const isDark = mounted ? (theme === 'dark' || resolvedTheme === 'dark') : false
 
   return (
     <button
       type="button"
       onClick={toggle}
-      aria-pressed={theme === 'dark'}
+      aria-pressed={isDark}
       aria-label="Toggle color theme"
       title="Toggle color theme"
-      className="mr-3 inline-flex items-center justify-center rounded-md p-1 text-gray-400 hover:text-white focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+      className="mr-3 inline-flex items-center justify-center rounded-md p-1 text-gray-400 hover:text-[#12F7D6] focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
     >
-      {theme === 'dark' ? (
+      {isDark ? (
         <SunIcon className="w-6 h-6" />
       ) : (
         <MoonIcon className="w-6 h-6" />
